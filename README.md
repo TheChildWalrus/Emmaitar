@@ -51,7 +51,9 @@ The recipe format is a list of eight dyes. In-game, this generates a crafting re
 The painting item in the middle must be a normal painting item, not an Emmaitar custom painting. The dyes use the Forge ore dictionary, so any dye of that colour will work to craft the painting, vanilla or modded.
 
 To configure these recipes in the metadata file you use a comma-separated list of dye names, as above:
+
 `dyes=LightBlue,LightBlue,LightBlue,White,White,Gray,Green,Gray`
+
 Again, these names are case-sensitive and there must be no spaces between them. There must be exactly **8** dyes - no more, no fewer!
 
 The list of dye names:
