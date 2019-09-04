@@ -16,7 +16,7 @@ Each painting must have an associated metadata file of the same name as the `.pn
 In this metadata file you specify:
 - the author name;
 - the painting's title (different from the filename);
-- the in-game dimensions of the painting (in blocks);
+- the in-game dimensions of the painting (width and height, in blocks);
 - and a list of dyes used to craft it.
 
 Here is an example of a metadata file: `gondolin.epm` for a painting `gondolin.png`.
@@ -35,7 +35,7 @@ dyes=LightBlue,LightBlue,LightBlue,White,White,Gray,Green,Gray
 
 Lines beginning with `#` are comments, which are ignored. Note the metadata format: `author=Goldbar22`, a key and a value separated by `=`, with **no spaces**. And the key is **case-sensitive** (don't capitalise `Author`).
 
-Most of these properties are straightforward, but let's take some time to explain the recipe syntax:
+Most of these properties are self-explanatory, but let's take some time to explain the recipe syntax:
 
 
 **Recipe syntax**
