@@ -1,0 +1,17 @@
+[
+{
+  "modid": "emmaitar",
+  "name": "Emmaitar",
+  "description": "A system for adding craftable custom paintings to a server. Developed for use with the LOTR Mod.
+  'Emmaitar': Quenya 'picture-artist' ('painter')",
+  "version": "1.0",
+  "mcversion": "1.7.10",
+  "url": "https://lotrminecraftmod.fandom.com/",
+  "updateUrl": "",
+  "authorList": ["Mevans"],
+  "credits": "Mevans",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

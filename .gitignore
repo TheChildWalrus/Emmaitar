@@ -1,7 +1,18 @@
-# Windows thumbnail cache files
+#################
+## Eclipse
+#################
+
+Emmaitar/*
+!Emmaitar/gradlew
+!Emmaitar/gradlew.bat
+!Emmaitar/build.gradle
+!Emmaitar/build.bat
+!Emmaitar/gradle/
+!Emmaitar/src/
+
+# Windows image file caches
 Thumbs.db
 ehthumbs.db
-ehthumbs_vista.db
 
 # Folder config file
 Desktop.ini
@@ -15,9 +26,23 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Windows shortcuts
-*.lnk
-
 # =========================
 # Operating System Files
 # =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must ends with two \r.
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
