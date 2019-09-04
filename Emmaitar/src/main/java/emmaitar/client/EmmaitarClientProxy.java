@@ -20,4 +20,10 @@ public class EmmaitarClientProxy extends EmmaitarCommonProxy
 	{
 		return ClientPaintingCatalogue.lookup(reference, true);
 	}
+	
+	@Override
+	public CustomPaintingData lookupPaintingByDyes(DyeReference[] dyes)
+	{
+		return ClientPaintingCatalogue.lookupByDyes(dyes);
+	}
 }

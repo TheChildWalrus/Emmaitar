@@ -47,6 +47,22 @@ public class ClientPaintingCatalogue
 		}
 	}
 	
+	public static void addPainting(CustomPaintingData painting)
+	{
+		allPaintings.add(painting);
+		idLookup.put(painting.identifier, painting);
+		
+		TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
+		String texPath = Emmaitar.getModContainer().getModId() + ":painting_" + painting.identifier;
+		painting.clientTexture = texManager.getDynamicTextureLocation(texPath, new DynamicTexture(painting.paintingIMG));
+	}
+	
+	private static void requestFromServer(String id)
+	{
+		PacketPaintingRequest pkt = new PacketPaintingRequest(id);
+		EmmaitarPacketHandler.networkWrapper.sendToServer(pkt);
+	}
+	
 	public static CustomPaintingData lookup(CustomPaintingReference reference, boolean request)
 	{
 		return lookup(reference.identifier, request);
@@ -66,20 +82,16 @@ public class ClientPaintingCatalogue
 		}
 		return painting;
 	}
-	
-	public static void addPainting(CustomPaintingData painting)
+
+	public static CustomPaintingData lookupByDyes(DyeReference[] dyes)
 	{
-		allPaintings.add(painting);
-		idLookup.put(painting.identifier, painting);
-		
-		TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
-		String texPath = Emmaitar.getModContainer().getModId() + ":painting_" + painting.identifier;
-		painting.clientTexture = texManager.getDynamicTextureLocation(texPath, new DynamicTexture(painting.paintingIMG));
-	}
-	
-	private static void requestFromServer(String id)
-	{
-		PacketPaintingRequest pkt = new PacketPaintingRequest(id);
-		EmmaitarPacketHandler.networkWrapper.sendToServer(pkt);
+		for (CustomPaintingData painting : allPaintings)
+		{
+			if (painting.matchesDyes(dyes))
+			{
+				return painting;
+			}
+		}
+		return null;
 	}
 }

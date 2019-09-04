@@ -45,7 +45,7 @@ public class RecipePaintings implements IRecipe
 					dyeIndex++;
 				}
 				
-				CustomPaintingData painting = PaintingCatalogue.lookupByDyes(dyes);
+				CustomPaintingData painting = Emmaitar.proxy.lookupPaintingByDyes(dyes);
 				if (painting != null)
 				{
 					ItemStack result = new ItemStack(Items.painting);

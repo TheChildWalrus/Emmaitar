@@ -10,4 +10,9 @@ public class EmmaitarCommonProxy
 	{
 		return null;
 	}
+
+	public CustomPaintingData lookupPaintingByDyes(DyeReference[] dyes)
+	{
+		return PaintingCatalogue.lookupByDyes(dyes);
+	}
 }
