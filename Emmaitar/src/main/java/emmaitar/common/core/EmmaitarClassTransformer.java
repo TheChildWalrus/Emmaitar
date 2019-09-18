@@ -79,8 +79,6 @@ public class EmmaitarClassTransformer implements IClassTransformer
 	{
 		if (entry.myEntity instanceof EntityCustomPainting && !Emmaitar.modEventHandler.shouldSendPaintingToClient(tracker))
 		{
-			//TODO remove this
-			System.out.println("Not sending painting because " + tracker.getCommandSenderName() + " does not have mod.");
 			return true;
 		}
 		return false;

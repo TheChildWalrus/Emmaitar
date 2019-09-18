@@ -222,7 +222,6 @@ public class EmmaitarEventHandler
 				EntityTrackerEntry entry = Reflect.getTrackerEntry(world, painting);
 				entry.tryStartWachingThis(player);
 				System.out.println("Updated for pong");
-				//TODO check and remove this
 			}
 			catch (Exception e)
 			{
