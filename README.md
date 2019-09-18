@@ -6,6 +6,8 @@ When installed on a server, the admins can upload painting images and configure 
 
 *Emmaitar* is Quenya for 'picture-artist' - *painter*.
 
+**Mod Download** - Emmaitar 1.0 (to be added)
+
 
 **How do I configure the paintings?**
 
