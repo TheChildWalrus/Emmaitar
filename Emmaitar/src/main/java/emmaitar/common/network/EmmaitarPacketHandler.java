@@ -16,6 +16,7 @@ public class EmmaitarPacketHandler
 		int id = 0;
 		
 		networkWrapper.registerMessage(PacketPaintingData.Handler.class, PacketPaintingData.class, id++, Side.CLIENT);
+		networkWrapper.registerMessage(PacketPaintingImage.Handler.class, PacketPaintingImage.class, id++, Side.CLIENT);
 		networkWrapper.registerMessage(PacketEmmaitarPing.Handler.class, PacketEmmaitarPing.class, id++, Side.CLIENT);
 		
 		networkWrapper.registerMessage(PacketPaintingRequest.Handler.class, PacketPaintingRequest.class, id++, Side.SERVER);

@@ -151,6 +151,28 @@ public class CustomPaintingData
 				buffer.writeByte(-1);
 			}
 		}
+	}
+	
+	public void readData(ByteBuf data) throws IOException
+	{
+		PacketBuffer buffer = new PacketBuffer(data);
+		identifier = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
+		authorName = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
+		title = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
+		blockWidth = buffer.readByte();
+		blockHeight = buffer.readByte();
+		
+		for (int i = 0; i < dyes.length; i++)
+		{
+			DyeReference dye = DyeReference.forID(buffer.readByte());
+			dyes[i] = dye;
+		}
+	}
+	
+	public void writeIDAndImage(ByteBuf data) throws IOException
+	{
+		PacketBuffer buffer = new PacketBuffer(data);
+		buffer.writeStringToBuffer(identifier);
 		
 		if (paintingIMG != null)
 		{
@@ -172,20 +194,10 @@ public class CustomPaintingData
 		}
 	}
 	
-	public void readData(ByteBuf data) throws IOException
+	public void readIDAndImage(ByteBuf data) throws IOException
 	{
 		PacketBuffer buffer = new PacketBuffer(data);
 		identifier = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
-		authorName = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
-		title = buffer.readStringFromBuffer(PaintingCatalogue.STRING_MAX_LENGTH);
-		blockWidth = buffer.readByte();
-		blockHeight = buffer.readByte();
-		
-		for (int i = 0; i < dyes.length; i++)
-		{
-			DyeReference dye = DyeReference.forID(buffer.readByte());
-			dyes[i] = dye;
-		}
 		
 		int imgWidth = buffer.readInt();
 		if (imgWidth >= 0)

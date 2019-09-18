@@ -3,6 +3,7 @@ package emmaitar.common;
 import java.util.*;
 import java.util.Map.Entry;
 
+import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -11,10 +12,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.*;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
@@ -64,7 +70,7 @@ public class EmmaitarEventHandler
 			}
 		}
 	}
-
+	
 	private boolean tryPlacePainting(EntityPlayer player, ItemStack itemstack, World world, int x, int y, int z, int face)
 	{
 		if (face == 0)
@@ -93,29 +99,58 @@ public class EmmaitarEventHandler
             		int paintingW = paintingData.blockWidth;
             		int paintingH = paintingData.blockHeight;
             		
-            		checkOtherPos:
-            		for (int i = -(paintingW - 1); i <= paintingW - 1; i++)
+            		List<Pair<Integer, Integer>> sortedCoords = new ArrayList();
+            		for (int i = -paintingW; i <= paintingW; i++)
             		{
-                		for (int j = -(paintingH - 1); j <= paintingH - 1; j++)
+                		for (int j = -paintingH; j <= paintingH; j++)
                 		{
-                			painting.field_146063_b = x;
-                			painting.field_146064_c = y + j;
-                			painting.field_146062_d = z;
-                			if (dir == 0 || dir == 2)
-                			{
-                				painting.field_146063_b += i;
-                			}
-                			else if (dir == 1 || dir == 3)
-                			{
-                				painting.field_146062_d += i;
-                			}
-                			painting.setDirection(dir);
-                			
-                			if (painting.onValidSurface())
-                			{
-                				break checkOtherPos;
-                			}
+                			sortedCoords.add(Pair.of(i, j));
                 		}
+            		}
+            		
+            		Collections.sort(sortedCoords, new Comparator<Pair<Integer, Integer>>()
+    				{
+						@Override
+						public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2)
+						{
+							int x1 = o1.getLeft();
+							int y1 = o1.getRight();
+							int x2 = o2.getLeft();
+							int y2 = o2.getRight();
+							int dSq1 = x1 * x1 + y1 * y1;
+							int dSq2 = x2 * x2 + y2 * y2;
+							return Integer.valueOf(dSq1).compareTo(dSq2);
+						}
+    				});
+            		
+            		checkOtherPos:
+            		for (Pair<Integer, Integer> coords : sortedCoords)
+            		{
+            			int i = coords.getLeft();
+            			int j = coords.getRight();
+            			
+            			AxisAlignedBB blockBB = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+            			
+            			painting.field_146063_b = x;
+            			painting.field_146064_c = y + j;
+            			painting.field_146062_d = z;
+            			if (dir == 0 || dir == 2)
+            			{
+            				painting.field_146063_b += i;
+            				blockBB = blockBB.expand(0D, 0D, 0.5D);
+            			}
+            			else if (dir == 1 || dir == 3)
+            			{
+            				painting.field_146062_d += i;
+            				blockBB = blockBB.expand(0.5D, 0D, 0D);
+            			}
+            			painting.setDirection(dir);
+            			
+            			AxisAlignedBB movedBB = painting.boundingBox.copy();
+            			if (movedBB.intersectsWith(blockBB) && painting.onValidSurface())
+            			{
+            				break checkOtherPos;
+            			}
             		}
             	}
             	
@@ -140,16 +175,19 @@ public class EmmaitarEventHandler
 	private Map<UUID, Integer> playersAwaitingPong = new HashMap();
 	private static final int PINGPONG_WAIT = 200;
 	private Set<UUID> playersWithoutMod = new HashSet();
+	private Set<UUID> playersWithMod = new HashSet();
 	
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
 	{
-		EntityPlayer player = event.player;
+		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		UUID playerID = player.getUniqueID();
 		
 		PacketEmmaitarPing pkt = new PacketEmmaitarPing();
-		EmmaitarPacketHandler.networkWrapper.sendTo(pkt, (EntityPlayerMP)player);
+		EmmaitarPacketHandler.networkWrapper.sendTo(pkt, player);
 		playersAwaitingPong.put(playerID, PINGPONG_WAIT);
+		
+		PaintingCatalogue.sendLoginToPlayer(player);
 	}
 	
 	@SubscribeEvent
@@ -160,15 +198,44 @@ public class EmmaitarEventHandler
 		
 		playersAwaitingPong.remove(playerID);
 		playersWithoutMod.remove(playerID);
+		playersWithMod.remove(playerID);
 	}
 	
-	public void receivePong(EntityPlayer player)
+	public void receivePong(EntityPlayerMP player)
 	{
 		UUID playerID = player.getUniqueID();
 		if (playersAwaitingPong.containsKey(playerID))
 		{
 			playersAwaitingPong.remove(playerID);
 		}
+		playersWithMod.add(playerID);
+		
+		// update all nearby paintings which would not have been sent to this player
+		WorldServer world = (WorldServer)player.worldObj;
+		double range = 80D;
+		List nearbyPaintings = world.getEntitiesWithinAABB(EntityCustomPainting.class, player.boundingBox.expand(range, range, range));
+		for (Object obj : nearbyPaintings)
+		{
+			EntityCustomPainting painting = (EntityCustomPainting)obj;
+			try
+			{
+				EntityTrackerEntry entry = Reflect.getTrackerEntry(world, painting);
+				entry.tryStartWachingThis(player);
+				System.out.println("Updated for pong");
+				//TODO check and remove this
+			}
+			catch (Exception e)
+			{
+				FMLLog.severe("Emmaitar ERROR: Failed to start tracking painting entity at [%d %d %d] (dim %d) for player %s!",
+						painting.field_146063_b, painting.field_146064_c, painting.field_146062_d, painting.dimension, player.getCommandSenderName());
+			}
+		}
+	}
+	
+	public boolean shouldSendPaintingToClient(EntityPlayerMP player)
+	{
+		UUID playerID = player.getUniqueID();
+		return playersWithMod.contains(playerID);
 	}
 	
 	@SubscribeEvent

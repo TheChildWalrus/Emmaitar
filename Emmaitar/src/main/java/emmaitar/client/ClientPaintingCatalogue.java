@@ -1,5 +1,6 @@
 package emmaitar.client;
 
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -51,16 +52,22 @@ public class ClientPaintingCatalogue
 	{
 		allPaintings.add(painting);
 		idLookup.put(painting.identifier, painting);
+	}
+	
+	private static void requestImageFromServer(String id)
+	{
+		PacketPaintingRequest pkt = new PacketPaintingRequest(id);
+		EmmaitarPacketHandler.networkWrapper.sendToServer(pkt);
+	}
+	
+	public static void addPaintingImage(String identifier, BufferedImage image)
+	{
+		CustomPaintingData painting = idLookup.get(identifier);
+		painting.paintingIMG = image;
 		
 		TextureManager texManager = Minecraft.getMinecraft().getTextureManager();
 		String texPath = Emmaitar.getModContainer().getModId() + ":painting_" + painting.identifier;
 		painting.clientTexture = texManager.getDynamicTextureLocation(texPath, new DynamicTexture(painting.paintingIMG));
-	}
-	
-	private static void requestFromServer(String id)
-	{
-		PacketPaintingRequest pkt = new PacketPaintingRequest(id);
-		EmmaitarPacketHandler.networkWrapper.sendToServer(pkt);
 	}
 	
 	public static CustomPaintingData lookup(CustomPaintingReference reference, boolean request)
@@ -71,12 +78,12 @@ public class ClientPaintingCatalogue
 	public static CustomPaintingData lookup(String id, boolean request)
 	{
 		CustomPaintingData painting = idLookup.get(id);
-		if (painting == null && request)
+		if (request && (painting == null || painting.clientTexture == null))
 		{
 			int tick = idRequestTicks.containsKey(id) ? idRequestTicks.get(id) : 0;
 			if (tick <= 0)
 			{
-				requestFromServer(id);
+				requestImageFromServer(id);
 				idRequestTicks.put(id, clientRequestInterval);
 			}
 		}

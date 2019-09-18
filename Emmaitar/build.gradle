@@ -21,6 +21,13 @@ version = "1.0"
 group= "Emmaitar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Emmaitar"
 
+jar {
+	manifest {
+        attributes 'FMLCorePlugin': 'emmaitar.common.core.EmmaitarLoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 minecraft {
     version = "1.7.10-10.13.4.1558-1.7.10"
     runDir = "eclipse"

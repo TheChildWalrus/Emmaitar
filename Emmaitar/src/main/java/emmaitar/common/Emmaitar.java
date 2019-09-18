@@ -1,13 +1,10 @@
 package emmaitar.common;
 
-import java.util.Map;
-
+import net.minecraftforge.oredict.RecipeSorter;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 import emmaitar.common.network.EmmaitarPacketHandler;
 
 @Mod(modid = "emmaitar", name = "Emmaitar", version = "1.0", acceptableRemoteVersions = "*")
@@ -30,6 +27,7 @@ public class Emmaitar
     	packetHandler = new EmmaitarPacketHandler();
     	
     	PaintingCatalogue.loadAll();
+    	RecipeSorter.register(getModContainer().getModId() + ":painting", RecipePaintings.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
     	GameRegistry.addRecipe(new RecipePaintings());
     	
     	EntityRegistry.registerModEntity(EntityCustomPainting.class, "EMPainting", 0, instance, 160, Integer.MAX_VALUE, false);

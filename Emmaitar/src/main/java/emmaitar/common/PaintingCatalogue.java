@@ -6,11 +6,15 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import org.apache.commons.io.input.BOMInputStream;
 
 import com.google.common.base.Charsets;
 
 import cpw.mods.fml.common.FMLLog;
+import emmaitar.common.network.EmmaitarPacketHandler;
+import emmaitar.common.network.PacketPaintingData;
 
 public class PaintingCatalogue
 {
@@ -180,5 +184,14 @@ public class PaintingCatalogue
 	public static CustomPaintingData getRandomPainting(Random rand)
 	{
 		return allPaintings.get(rand.nextInt(allPaintings.size()));
+	}
+	
+	public static void sendLoginToPlayer(EntityPlayerMP player)
+	{
+		for (CustomPaintingData painting : allPaintings)
+		{
+			PacketPaintingData pkt = new PacketPaintingData(painting);
+			EmmaitarPacketHandler.networkWrapper.sendTo(pkt, player);
+		}
 	}
 }

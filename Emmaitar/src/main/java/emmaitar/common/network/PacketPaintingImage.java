@@ -8,13 +8,13 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import emmaitar.client.ClientPaintingCatalogue;
 import emmaitar.common.CustomPaintingData;
 
-public class PacketPaintingData implements IMessage
+public class PacketPaintingImage implements IMessage
 {
 	private CustomPaintingData painting;
 	
-	public PacketPaintingData() {}
+	public PacketPaintingImage() {}
 	
-	public PacketPaintingData(CustomPaintingData p)
+	public PacketPaintingImage(CustomPaintingData p)
 	{
 		painting = p;
 	}
@@ -24,7 +24,7 @@ public class PacketPaintingData implements IMessage
 	{
 		try
 		{
-			painting.writeData(data);
+			painting.writeIDAndImage(data);
 		}
 		catch (IOException e)
 		{
@@ -38,7 +38,7 @@ public class PacketPaintingData implements IMessage
 		painting = new CustomPaintingData();
 		try
 		{
-			painting.readData(data);
+			painting.readIDAndImage(data);
 		}
 		catch (IOException e)
 		{
@@ -46,18 +46,14 @@ public class PacketPaintingData implements IMessage
 		}
 	}
 	
-	public static class Handler implements IMessageHandler<PacketPaintingData, IMessage>
+	public static class Handler implements IMessageHandler<PacketPaintingImage, IMessage>
 	{
 		public Handler() {}
 		
 		@Override
-		public IMessage onMessage(PacketPaintingData packet, MessageContext context)
+		public IMessage onMessage(PacketPaintingImage packet, MessageContext context)
 		{
-			CustomPaintingData painting = packet.painting;
-			if (painting.checkMetaComplete())
-			{
-				ClientPaintingCatalogue.addPainting(painting);
-			}
+			ClientPaintingCatalogue.addPaintingImage(packet.painting.identifier, packet.painting.paintingIMG);
 			
 			return null;
 		}

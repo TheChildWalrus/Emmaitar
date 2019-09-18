@@ -47,7 +47,7 @@ public class RenderCustomPainting extends Render
     private void renderPainting(EntityCustomPainting painting)
     {
     	CustomPaintingData paintingData = painting.getCustomPaintingData();
-    	if (paintingData == null)
+    	if (paintingData == null || paintingData.clientTexture == null)
     	{
     		return;
     	}

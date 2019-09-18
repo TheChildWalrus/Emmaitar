@@ -62,7 +62,7 @@ public class PacketPaintingRequest implements IMessage
 			CustomPaintingData painting = PaintingCatalogue.lookup(id);
 			if (painting != null)
 			{
-				PacketPaintingData response = new PacketPaintingData(painting);
+				PacketPaintingImage response = new PacketPaintingImage(painting);
 				EmmaitarPacketHandler.networkWrapper.sendTo(response, player);
 			}
 			
