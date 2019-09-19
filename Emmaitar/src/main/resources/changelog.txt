@@ -1,0 +1,7 @@
+Emmaitar 1.1
+
++ Added a warning if there is a recipe conflict between paintings
+
+Emmaitar 1.0
+
++ Created the mod!
