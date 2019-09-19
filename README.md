@@ -89,6 +89,8 @@ The mod also adds two ingame commands: `emmaitar_give` and `emmaitar_print`.
 
 `emmaitar_print <painting-id>` is a singleplayer-only command which will auto-generate info images for paintings, like this:
 
+![alt text](https://github.com/TheChildWalrus/Emmaitar/blob/master/example_info_printout.png "Info printout for a Rohan Tapestry")
+
 These images are placed in the folder `emmaitar-paintings/info-printouts`.
 
 The point of this printout command is to help server admins if they want to make a recipe catalogue available to the players. Rather than spending ages arranging your configured recipes in-game and taking screenshots, you can just run this command in singleplayer with the paintings and auto-generate a catalogue of painting information.
