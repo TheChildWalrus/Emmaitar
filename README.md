@@ -79,3 +79,16 @@ White
 ```
 
 For the sake of completion, I should point out that **each custom painting needs to have a unique dye recipe**!
+
+
+**Commands**
+
+The mod also adds two ingame commands: `emmaitar_give` and `emmaitar_print`.
+
+`emmaitar_give <player> <painting-id>` gives the player a pre-made item of the specified custom painting, so you don't have to craft it.
+
+`emmaitar_print <painting-id>` is a singleplayer-only command which will auto-generate info images for paintings, like this:
+
+These images are placed in the folder `emmaitar-paintings/info-printouts`.
+
+The point of this printout command is to help server admins if they want to make a recipe catalogue available to the players. Rather than spending ages arranging your configured recipes in-game and taking screenshots, you can just run this command in singleplayer with the paintings and auto-generate a catalogue of painting information.
