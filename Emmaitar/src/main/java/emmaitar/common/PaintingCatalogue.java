@@ -82,6 +82,8 @@ public class PaintingCatalogue
 				}
 			}
 		}
+		
+		FMLLog.info("Emmaitar successfully loaded %d paintings", allPaintings.size());
 	}
 	
 	private static File getPaintingDir()
@@ -145,6 +147,12 @@ public class PaintingCatalogue
 		{
 			FMLLog.severe("Emmaitar ERROR: A custom painting with the title %s already exists! Change the title in the painting's meta file.", painting.title);
 			return false;
+		}
+		
+		CustomPaintingData recipeConflict = lookupByDyes(painting.dyes);
+		if (recipeConflict != null)
+		{
+			FMLLog.severe("Emmaitar ERROR: Recipe conflict! Painting %s already has the same recipe as painting %s! Change one of these recipes.", recipeConflict.identifier, painting.identifier);
 		}
 		
 		allPaintings.add(painting);
