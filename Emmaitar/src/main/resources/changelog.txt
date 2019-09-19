@@ -1,5 +1,7 @@
 Emmaitar 1.1
 
++ Added the /emmaitar_give command for easily obtaining the custom painting items
++ Added the /emmaitar_print command to auto-generate painting info images
 + Added a warning if there is a recipe conflict between paintings
 
 Emmaitar 1.0

@@ -208,6 +208,7 @@ public class EmmaitarEventHandler
 		{
 			playersAwaitingPong.remove(playerID);
 		}
+		playersWithoutMod.remove(playerID);
 		playersWithMod.add(playerID);
 		
 		// update all nearby paintings which would not have been sent to this player
