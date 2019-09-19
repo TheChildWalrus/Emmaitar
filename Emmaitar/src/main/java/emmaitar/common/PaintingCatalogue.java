@@ -83,7 +83,7 @@ public class PaintingCatalogue
 			}
 		}
 		
-		FMLLog.info("Emmaitar successfully loaded %d paintings", allPaintings.size());
+		FMLLog.info("Emmaitar: Successfully loaded %d paintings", allPaintings.size());
 	}
 	
 	private static File getPaintingDir()
@@ -158,7 +158,7 @@ public class PaintingCatalogue
 		allPaintings.add(painting);
 		idLookup.put(painting.identifier, painting);
 		titleLookup.put(painting.title, painting);
-		FMLLog.info("Emmaitar successfully loaded painting: %s", painting.identifier);
+		FMLLog.info("Emmaitar: Successfully loaded painting: %s", painting.identifier);
 		return true;
 	}
 	
