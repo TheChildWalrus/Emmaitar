@@ -1,5 +1,8 @@
 package emmaitar.common;
 
+import java.util.List;
+
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -73,6 +76,19 @@ public enum DyeReference
 						return dye;
 					}
 				}
+			}
+		}
+		return null;
+	}
+	
+	public ItemStack createBasicDyeItem()
+	{
+		List<ItemStack> dyeItems = OreDictionary.getOres(oreDictName);
+		for (ItemStack item : dyeItems)
+		{
+			if (item.getItem() == Items.dye)
+			{
+				return item.copy();
 			}
 		}
 		return null;

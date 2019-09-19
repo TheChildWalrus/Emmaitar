@@ -3,3 +3,12 @@ emmaitar.tooltip.header=Emmaitar Painting
 emmaitar.tooltip.title=%s
 emmaitar.tooltip.author=by %s
 emmaitar.tooltip.dimensions=%dx%d
+
+commands.emmaitar_print.usage=/emmaitar_print <painting-id>
+commands.emmaitar_print.success=Printed painting recipe for %s
+commands.emmaitar_print.successAll=Printed all painting recipes (%d paintings)
+commands.emmaitar_print.noPainting=No painting exists for %s
+
+commands.emmaitar_give.usage=/emmaitar_give <player> <painting-id>
+commands.emmaitar_give.success=Given painting %2$s to %1$s
+commands.emmaitar_give.noPainting=No painting exists for %s

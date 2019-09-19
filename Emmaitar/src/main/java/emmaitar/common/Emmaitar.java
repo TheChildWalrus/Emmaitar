@@ -3,6 +3,7 @@ package emmaitar.common;
 import net.minecraftforge.oredict.RecipeSorter;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import emmaitar.common.network.EmmaitarPacketHandler;
@@ -31,6 +32,16 @@ public class Emmaitar
     	GameRegistry.addRecipe(new RecipePaintings());
     	
     	EntityRegistry.registerModEntity(EntityCustomPainting.class, "EMPainting", 0, instance, 160, Integer.MAX_VALUE, false);
+    }
+    
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+    	if (!event.getServer().isDedicatedServer())
+    	{
+    		event.registerServerCommand(new CommandPrintPaintingInfo());
+    	}
+    	event.registerServerCommand(new CommandPaintingGive());
     }
     
     public static ModContainer getModContainer()

@@ -1,5 +1,7 @@
 package emmaitar.common;
 
+import java.io.IOException;
+
 public class EmmaitarCommonProxy
 {
 	public void load()
@@ -15,4 +17,6 @@ public class EmmaitarCommonProxy
 	{
 		return PaintingCatalogue.lookupByDyes(dyes);
 	}
+
+	public void printPaintingInfo(CustomPaintingData painting) throws IOException {}
 }

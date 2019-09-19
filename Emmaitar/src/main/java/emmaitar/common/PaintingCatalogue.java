@@ -86,7 +86,7 @@ public class PaintingCatalogue
 		FMLLog.info("Emmaitar: Successfully loaded %d paintings", allPaintings.size());
 	}
 	
-	private static File getPaintingDir()
+	public static File getPaintingDir()
 	{
 		return new File("emmaitar-paintings");
 	}
@@ -187,6 +187,21 @@ public class PaintingCatalogue
 			}
 		}
 		return null;
+	}
+	
+	public static List<CustomPaintingData> listAllPaintings()
+	{
+		return new ArrayList(allPaintings);
+	}
+	
+	public static List<String> listAllPaintingIDs()
+	{
+		List<String> list = new ArrayList();
+		for (CustomPaintingData painting : allPaintings)
+		{
+			list.add(painting.identifier);
+		}
+		return list;
 	}
 
 	public static CustomPaintingData getRandomPainting(Random rand)
