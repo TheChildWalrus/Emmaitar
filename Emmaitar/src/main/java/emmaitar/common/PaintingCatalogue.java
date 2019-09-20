@@ -182,7 +182,7 @@ public class PaintingCatalogue
 		allPaintings.add(painting);
 		idLookup.put(painting.identifier, painting);
 		titleLookup.put(painting.title, painting);
-		FMLLog.info("Emmaitar: Successfully loaded painting: %s, %d", painting.identifier, painting.paintingIMG.getType());
+		FMLLog.info("Emmaitar: Successfully loaded painting: %s", painting.identifier);
 		return true;
 	}
 	
