@@ -8,7 +8,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import emmaitar.common.network.EmmaitarPacketHandler;
 
-@Mod(modid = "emmaitar", name = "Emmaitar", version = "1.1", acceptableRemoteVersions = "*")
+@Mod(modid = "emmaitar", name = "Emmaitar", version = "1.1.1", acceptableRemoteVersions = "*")
 public class Emmaitar
 {
 	@Mod.Instance

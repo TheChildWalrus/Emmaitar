@@ -188,6 +188,29 @@ public class EmmaitarEventHandler
 		playersAwaitingPong.put(playerID, PINGPONG_WAIT);
 		
 		PaintingCatalogue.sendLoginToPlayer(player);
+		
+		MinecraftServer server = MinecraftServer.getServer();
+		if (server.isSinglePlayer() || server.getConfigurationManager().func_152596_g(player.getGameProfile()))
+		{
+			List<String> conflictingIDs = PaintingCatalogue.listConflictingPaintingIDs();
+			if (!conflictingIDs.isEmpty())
+			{
+				IChatComponent msg1 = new ChatComponentText("Emmaitar: Warning! " + conflictingIDs.size() + " paintings have conflicting recipes:");
+				msg1.getChatStyle().setColor(EnumChatFormatting.GOLD);
+				player.addChatMessage(msg1);
+				
+				for (String conflicting : conflictingIDs)
+				{
+					IChatComponent msgConflict = new ChatComponentText("> " + conflicting);
+					msgConflict.getChatStyle().setColor(EnumChatFormatting.GOLD);
+					player.addChatMessage(msgConflict);
+				}
+				
+				IChatComponent msg2 = new ChatComponentText("You need to change these paintings' recipes in their .epm files.");
+				msg2.getChatStyle().setColor(EnumChatFormatting.GOLD);
+				player.addChatMessage(msg2);
+			}
+		}
 	}
 	
 	@SubscribeEvent

@@ -22,6 +22,8 @@ public class PaintingCatalogue
 	private static Map<String, CustomPaintingData> idLookup = new HashMap();
 	private static Map<String, CustomPaintingData> titleLookup = new HashMap();
 	
+	private static List<CustomPaintingData> recipeConflicting = new ArrayList();
+	
 	public static final int STRING_MAX_LENGTH = 128;
 	
 	public static void loadAll()
@@ -153,6 +155,15 @@ public class PaintingCatalogue
 		if (recipeConflict != null)
 		{
 			FMLLog.severe("Emmaitar ERROR: Recipe conflict! Painting %s already has the same recipe as painting %s! Change one of these recipes.", recipeConflict.identifier, painting.identifier);
+			
+			if (!recipeConflicting.contains(painting))
+			{
+				recipeConflicting.add(painting);
+			}
+			if (!recipeConflicting.contains(recipeConflict))
+			{
+				recipeConflicting.add(recipeConflict);
+			}
 		}
 		
 		allPaintings.add(painting);
@@ -216,5 +227,15 @@ public class PaintingCatalogue
 			PacketPaintingData pkt = new PacketPaintingData(painting);
 			EmmaitarPacketHandler.networkWrapper.sendTo(pkt, player);
 		}
+	}
+	
+	public static List<String> listConflictingPaintingIDs()
+	{
+		List<String> list = new ArrayList();
+		for (CustomPaintingData painting : recipeConflicting)
+		{
+			list.add(painting.identifier);
+		}
+		return list;
 	}
 }

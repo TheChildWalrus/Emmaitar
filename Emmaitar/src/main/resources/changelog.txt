@@ -1,3 +1,7 @@
+Emmaitar 1.1.1
+
+* If there are conflicting painting recipes, admins get a warning message upon login
+
 Emmaitar 1.1
 
 + Added the /emmaitar_give command for easily obtaining the custom painting items
