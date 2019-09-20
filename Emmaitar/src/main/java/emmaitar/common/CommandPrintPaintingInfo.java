@@ -45,7 +45,7 @@ public class CommandPrintPaintingInfo extends CommandBase
 			else
 			{
 				CustomPaintingData painting = PaintingCatalogue.lookup(id);
-				if (painting != null && painting.paintingIMG != null)
+				if (painting != null)
 				{
 					printPainting(sender, painting);
 					func_152373_a(sender, this, "commands.emmaitar_print.success", painting.identifier);

@@ -1,3 +1,8 @@
+Emmaitar 1.1.2
+
+* Fixed some painting images being loaded with reduced colour depth
+* Painting entities which refer to nonexistent paintings are now removed from the world upon loading
+
 Emmaitar 1.1.1
 
 * If there are conflicting painting recipes, admins get a warning message upon login

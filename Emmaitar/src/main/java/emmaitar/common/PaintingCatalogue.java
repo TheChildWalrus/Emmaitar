@@ -40,17 +40,27 @@ public class PaintingCatalogue
 		{
 			if (sub.getName().endsWith(".png"))
 			{
+				String filename = sub.getName();
+				filename = filename.substring(0, filename.indexOf(".png"));
+				if (filename.length() > STRING_MAX_LENGTH)
+				{
+					FMLLog.warning("Emmaitar ERROR: Painting %s needs a shorter ID! Max filename length is %d", filename, STRING_MAX_LENGTH);
+					continue subLoop;
+				}
+				
+				BufferedImage img = null;
 				try
 				{
-					String filename = sub.getName();
-					filename = filename.substring(0, filename.indexOf(".png"));
-					if (filename.length() > STRING_MAX_LENGTH)
-					{
-						FMLLog.warning("Emmaitar ERROR: Painting %s needs a shorter ID! Max filename length is %d", filename, STRING_MAX_LENGTH);
-						continue subLoop;
-					}
-					
-					BufferedImage img = ImageIO.read(sub);
+					img = readPaintingImage(sub);
+				}
+				catch (IOException e)
+				{
+					FMLLog.warning("Emmaitar ERROR: Failed to load painting image from file %s", sub.getName());
+					e.printStackTrace();
+				}
+				
+				if (img != null)
+				{
 					if (img.getWidth() % 16 != 0)
 					{
 						FMLLog.warning("Emmaitar ERROR: Painting %s width is not a multiple of 16!", filename);
@@ -77,11 +87,6 @@ public class PaintingCatalogue
 						registerPainting(painting);
 					}
 				}
-				catch (IOException e)
-				{
-					FMLLog.warning("Emmaitar ERROR: Failed to load painting image from file %s", sub.getName());
-					e.printStackTrace();
-				}
 			}
 		}
 		
@@ -91,6 +96,14 @@ public class PaintingCatalogue
 	public static File getPaintingDir()
 	{
 		return new File("emmaitar-paintings");
+	}
+	
+	private static BufferedImage readPaintingImage(File file) throws IOException
+	{
+		BufferedImage loaded = ImageIO.read(file);
+		BufferedImage converted = new BufferedImage(loaded.getWidth(), loaded.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+		converted.createGraphics().drawImage(loaded, null, 0, 0);
+		return converted;
 	}
 	
 	private static boolean loadPaintingMeta(CustomPaintingData painting, File metaFile)
@@ -169,7 +182,7 @@ public class PaintingCatalogue
 		allPaintings.add(painting);
 		idLookup.put(painting.identifier, painting);
 		titleLookup.put(painting.title, painting);
-		FMLLog.info("Emmaitar: Successfully loaded painting: %s", painting.identifier);
+		FMLLog.info("Emmaitar: Successfully loaded painting: %s, %d", painting.identifier, painting.paintingIMG.getType());
 		return true;
 	}
 	
@@ -185,7 +198,7 @@ public class PaintingCatalogue
 		{
 			return found;
 		}
-		return CustomPaintingData.unknown();
+		return null;
 	}
 	
 	public static CustomPaintingData lookupByDyes(DyeReference[] dyes)

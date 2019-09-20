@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityCustomPainting extends EntityHanging implements IEntityAdditionalSpawnData
@@ -95,7 +96,15 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
     {
     	paintingReference = new CustomPaintingReference(nbt.getString("CustomPaintingID"));
     	paintingData = PaintingCatalogue.lookup(paintingReference);
-        super.readEntityFromNBT(nbt);
+        if (paintingData != null)
+        {
+        	super.readEntityFromNBT(nbt);
+        }
+        else
+        {
+        	setDead();
+        	FMLLog.warning("Emmaitar ERROR: Painting %s does not exist! Removing placed painting entity from world", paintingReference.identifier);
+        }
     }
 
     @Override

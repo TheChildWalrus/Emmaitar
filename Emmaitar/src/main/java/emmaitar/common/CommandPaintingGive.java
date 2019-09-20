@@ -37,7 +37,7 @@ public class CommandPaintingGive extends CommandBase
 			EntityPlayerMP player = getPlayer(sender, args[0]);
 			String id = args[1];
 			CustomPaintingData painting = PaintingCatalogue.lookup(id);
-			if (painting != null && painting.paintingIMG != null)
+			if (painting != null)
 			{
 				ItemStack itemstack = new ItemStack(Items.painting);
 				CustomPaintingReference.setCustomPainting(itemstack, painting.makeReference());

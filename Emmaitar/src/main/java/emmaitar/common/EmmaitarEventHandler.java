@@ -86,88 +86,95 @@ public class EmmaitarEventHandler
             int dir = Direction.facingToDirection[face];
             CustomPaintingReference reference = CustomPaintingReference.getCustomPainting(itemstack);
             CustomPaintingData paintingData = PaintingCatalogue.lookup(reference);
-            EntityCustomPainting painting = new EntityCustomPainting(world, x, y, z, dir, reference);
-
-            if (!player.canPlayerEdit(x, y, z, face, itemstack))
+            if (paintingData != null)
             {
-                return false;
+	            EntityCustomPainting painting = new EntityCustomPainting(world, x, y, z, dir, reference);
+	
+	            if (!player.canPlayerEdit(x, y, z, face, itemstack))
+	            {
+	                return false;
+	            }
+	            else
+	            {
+	            	if (!painting.onValidSurface())
+	            	{
+	            		int paintingW = paintingData.blockWidth;
+	            		int paintingH = paintingData.blockHeight;
+	            		
+	            		List<Pair<Integer, Integer>> sortedCoords = new ArrayList();
+	            		for (int i = -paintingW; i <= paintingW; i++)
+	            		{
+	                		for (int j = -paintingH; j <= paintingH; j++)
+	                		{
+	                			sortedCoords.add(Pair.of(i, j));
+	                		}
+	            		}
+	            		
+	            		Collections.sort(sortedCoords, new Comparator<Pair<Integer, Integer>>()
+	    				{
+							@Override
+							public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2)
+							{
+								int x1 = o1.getLeft();
+								int y1 = o1.getRight();
+								int x2 = o2.getLeft();
+								int y2 = o2.getRight();
+								int dSq1 = x1 * x1 + y1 * y1;
+								int dSq2 = x2 * x2 + y2 * y2;
+								return Integer.valueOf(dSq1).compareTo(dSq2);
+							}
+	    				});
+	            		
+	            		checkOtherPos:
+	            		for (Pair<Integer, Integer> coords : sortedCoords)
+	            		{
+	            			int i = coords.getLeft();
+	            			int j = coords.getRight();
+	            			
+	            			AxisAlignedBB blockBB = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+	            			
+	            			painting.field_146063_b = x;
+	            			painting.field_146064_c = y + j;
+	            			painting.field_146062_d = z;
+	            			if (dir == 0 || dir == 2)
+	            			{
+	            				painting.field_146063_b += i;
+	            				blockBB = blockBB.expand(0D, 0D, 0.5D);
+	            			}
+	            			else if (dir == 1 || dir == 3)
+	            			{
+	            				painting.field_146062_d += i;
+	            				blockBB = blockBB.expand(0.5D, 0D, 0D);
+	            			}
+	            			painting.setDirection(dir);
+	            			
+	            			AxisAlignedBB movedBB = painting.boundingBox.copy();
+	            			if (movedBB.intersectsWith(blockBB) && painting.onValidSurface())
+	            			{
+	            				break checkOtherPos;
+	            			}
+	            		}
+	            	}
+	            	
+	                if (painting.onValidSurface())
+	                {
+	                    if (!world.isRemote)
+	                    {
+	                    	world.spawnEntityInWorld(painting);
+	                    }
+	                    
+	                    if (!player.capabilities.isCreativeMode)
+	                    {
+	                    	itemstack.stackSize--;
+	                    }
+	                }
+	
+	                return true;
+	            }
             }
             else
             {
-            	if (!painting.onValidSurface())
-            	{
-            		int paintingW = paintingData.blockWidth;
-            		int paintingH = paintingData.blockHeight;
-            		
-            		List<Pair<Integer, Integer>> sortedCoords = new ArrayList();
-            		for (int i = -paintingW; i <= paintingW; i++)
-            		{
-                		for (int j = -paintingH; j <= paintingH; j++)
-                		{
-                			sortedCoords.add(Pair.of(i, j));
-                		}
-            		}
-            		
-            		Collections.sort(sortedCoords, new Comparator<Pair<Integer, Integer>>()
-    				{
-						@Override
-						public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2)
-						{
-							int x1 = o1.getLeft();
-							int y1 = o1.getRight();
-							int x2 = o2.getLeft();
-							int y2 = o2.getRight();
-							int dSq1 = x1 * x1 + y1 * y1;
-							int dSq2 = x2 * x2 + y2 * y2;
-							return Integer.valueOf(dSq1).compareTo(dSq2);
-						}
-    				});
-            		
-            		checkOtherPos:
-            		for (Pair<Integer, Integer> coords : sortedCoords)
-            		{
-            			int i = coords.getLeft();
-            			int j = coords.getRight();
-            			
-            			AxisAlignedBB blockBB = AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
-            			
-            			painting.field_146063_b = x;
-            			painting.field_146064_c = y + j;
-            			painting.field_146062_d = z;
-            			if (dir == 0 || dir == 2)
-            			{
-            				painting.field_146063_b += i;
-            				blockBB = blockBB.expand(0D, 0D, 0.5D);
-            			}
-            			else if (dir == 1 || dir == 3)
-            			{
-            				painting.field_146062_d += i;
-            				blockBB = blockBB.expand(0.5D, 0D, 0D);
-            			}
-            			painting.setDirection(dir);
-            			
-            			AxisAlignedBB movedBB = painting.boundingBox.copy();
-            			if (movedBB.intersectsWith(blockBB) && painting.onValidSurface())
-            			{
-            				break checkOtherPos;
-            			}
-            		}
-            	}
-            	
-                if (painting.onValidSurface())
-                {
-                    if (!world.isRemote)
-                    {
-                    	world.spawnEntityInWorld(painting);
-                    }
-                    
-                    if (!player.capabilities.isCreativeMode)
-                    {
-                    	itemstack.stackSize--;
-                    }
-                }
-
-                return true;
+            	return false;
             }
         }
 	}
