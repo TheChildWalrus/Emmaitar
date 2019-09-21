@@ -11,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
@@ -153,5 +154,13 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         ItemStack paintingItem = new ItemStack(Items.painting);
         CustomPaintingReference.setCustomPainting(paintingItem, paintingReference);
         entityDropItem(paintingItem, 0F);
+    }
+    
+    @Override
+    public ItemStack getPickedResult(MovingObjectPosition target)
+    {
+        ItemStack paintingItem = new ItemStack(Items.painting);
+        CustomPaintingReference.setCustomPainting(paintingItem, paintingReference);
+        return paintingItem;
     }
 }
