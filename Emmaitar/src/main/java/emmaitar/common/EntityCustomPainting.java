@@ -11,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLLog;
@@ -38,6 +39,75 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         	paintingData = PaintingCatalogue.lookup(paintingReference);
         }
         setDirection(side);
+    }
+    
+    // Override this from EntityHanging to fix issues if width/height is an EVEN number > 4.
+    // (EntityHanging.func_70517_b must be extended to work for all even numbers)
+    @Override
+    public void setDirection(int dir)
+    {
+        hangingDirection = dir;
+
+        float sizeX = (float)getWidthPixels();
+        float sizeY = (float)getHeightPixels();
+        float sizeZ = (float)getWidthPixels();
+        if (dir != 2 && dir != 0)
+        {
+            sizeX = 1F;
+            rotationYaw = prevRotationYaw = (float)(dir * 90);
+        }
+        else
+        {
+            sizeZ = 1F;
+            rotationYaw = prevRotationYaw = (float)(Direction.rotateOpposite[dir] * 90);
+        }
+        sizeX /= 16F;
+        sizeY /= 16F;
+        sizeZ /= 16F;
+        
+        float x = (float)field_146063_b + 0.5F;
+        float y = (float)field_146064_c + 0.5F;
+        float z = (float)field_146062_d + 0.5F;
+        float depth = 0.5625F;
+
+        int blockW = getWidthBlocks();
+        int blockH = getHeightBlocks();
+        
+        if (dir == 2)
+        {
+            z -= depth;
+            x -= getOffset(blockW);
+        }
+        else if (dir == 1)
+        {
+            x -= depth;
+            z += getOffset(blockW);
+        }
+        else if (dir == 0)
+        {
+            z += depth;
+            x += getOffset(blockW);
+        }
+        else if (dir == 3)
+        {
+            x += depth;
+            z -= getOffset(blockW);
+        }
+
+        y += getOffset(blockH);
+        setPosition(x, y, z);
+        
+        float halfX = sizeX / 2F;
+        float halfY = sizeY / 2F;
+        float halfZ = sizeZ / 2F;
+        float bbEdge = -0.03125F;
+        boundingBox.setBounds(x - halfX - bbEdge, y - halfY - bbEdge, z - halfZ - bbEdge, x + halfX + bbEdge, y + halfY + bbEdge, z + halfZ + bbEdge);
+    }
+
+    // Extended version of EntityHanging.func_70517_b
+    private float getOffset(int blockSize)
+    {
+        return (blockSize % 2) == 0 ? 0.5F : 0F;
     }
     
 	@Override
@@ -107,25 +177,35 @@ public class EntityCustomPainting extends EntityHanging implements IEntityAdditi
         	FMLLog.warning("Emmaitar ERROR: Painting %s does not exist! Removing placed painting entity from world", paintingReference.identifier);
         }
     }
-
-    @Override
-    public int getWidthPixels()
+    
+    private int getWidthBlocks()
     {
     	if (worldObj.isRemote)
     	{
-    		return clientBlockWidth * 16;
+    		return clientBlockWidth;
     	}
-        return paintingData.blockWidth * 16;
+    	return paintingData.blockWidth;
+    }
+    
+    private int getHeightBlocks()
+    {
+    	if (worldObj.isRemote)
+    	{
+    		return clientBlockHeight;
+    	}
+        return paintingData.blockHeight;
     }
 
     @Override
-    public int getHeightPixels()
+    public final int getWidthPixels()
     {
-    	if (worldObj.isRemote)
-    	{
-    		return clientBlockHeight * 16;
-    	}
-        return paintingData.blockHeight * 16;
+    	return getWidthBlocks() * 16;
+    }
+
+    @Override
+    public final int getHeightPixels()
+    {
+    	return getHeightBlocks() * 16;
     }
     
     @Override
