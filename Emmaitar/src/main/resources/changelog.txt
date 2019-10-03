@@ -1,3 +1,8 @@
+Emmaitar 1.2
+
+* Custom paintings now render with a consistent, smooth level of lighting over the whole painting (lighting is averaged over all blocks)
+* No need to log every successful painting load
+
 Emmaitar 1.1.4
 
 * Fixed placement issues when painting dimensions are even numbers greater than 4

@@ -72,67 +72,91 @@ public class RenderCustomPainting extends Render
         float f12 = 193F / 256F;
         float f13 = 0F / 256F;
         float f14 = 16F / 256F;
-
-        for (int i = 0; i < paintingData.blockWidth; i++)
+        
+       	long lightTotal = 0;
+       	int lightCount = 0;
+       	int averagedLight = 0;
+        
+        for (int pass = 0; pass <= 1; pass++)
         {
-            for (int j = 0; j < paintingData.blockHeight; j++)
-            {
-                float xMin = halfW + (i * 16);
-                float xMax = halfW + ((i + 1) * 16);
-                float yMin = halfH + (j * 16);
-                float yMax = halfH + ((j + 1) * 16);
-                
-                setupLighting(painting, (xMax + xMin) / 2F, (yMax + yMin) / 2F);
-                
-                float uMin = (float)(paintingData.blockWidth - i - 1) / (float)paintingData.blockWidth;
-                float uMax = (float)(paintingData.blockWidth - i) / (float)paintingData.blockWidth;
-                float vMin = (float)(paintingData.blockHeight - j - 1) / (float)paintingData.blockHeight;
-                float vMax = (float)(paintingData.blockHeight - j) / (float)paintingData.blockHeight;
-                
-                Tessellator tessellator = Tessellator.instance;
-                
-                bindTexture(paintingData.clientTexture);
-                tessellator.startDrawingQuads();
-                tessellator.setNormal(0F, 0F, -1F);
-                tessellator.addVertexWithUV(xMax, yMin, -depth, uMin, vMax);
-                tessellator.addVertexWithUV(xMin, yMin, -depth, uMax, vMax);
-                tessellator.addVertexWithUV(xMin, yMax, -depth, uMax, vMin);
-                tessellator.addVertexWithUV(xMax, yMax, -depth, uMin, vMin);
-                tessellator.draw();
-                
-                bindTexture(defaultPaintingTexture);
-                tessellator.startDrawingQuads();
-                tessellator.setNormal(0F, 0F, 1F);
-                tessellator.addVertexWithUV(xMax, yMax, depth, backUMin, backVMin);
-                tessellator.addVertexWithUV(xMin, yMax, depth, backUMax, backVMin);
-                tessellator.addVertexWithUV(xMin, yMin, depth, backUMax, backVMax);
-                tessellator.addVertexWithUV(xMax, yMin, depth, backUMin, backVMax);
-                tessellator.setNormal(0F, 1F, 0F);
-                tessellator.addVertexWithUV(xMax, yMax, -depth, f7, f9);
-                tessellator.addVertexWithUV(xMin, yMax, -depth, f8, f9);
-                tessellator.addVertexWithUV(xMin, yMax, depth, f8, f10);
-                tessellator.addVertexWithUV(xMax, yMax, depth, f7, f10);
-                tessellator.setNormal(0F, -1F, 0F);
-                tessellator.addVertexWithUV(xMax, yMin, depth, f7, f9);
-                tessellator.addVertexWithUV(xMin, yMin, depth, f8, f9);
-                tessellator.addVertexWithUV(xMin, yMin, -depth, f8, f10);
-                tessellator.addVertexWithUV(xMax, yMin, -depth, f7, f10);
-                tessellator.setNormal(-1F, 0F, 0F);
-                tessellator.addVertexWithUV(xMax, yMax, depth, f12, f13);
-                tessellator.addVertexWithUV(xMax, yMin, depth, f12, f14);
-                tessellator.addVertexWithUV(xMax, yMin, -depth, f11, f14);
-                tessellator.addVertexWithUV(xMax, yMax, -depth, f11, f13);
-                tessellator.setNormal(1F, 0F, 0F);
-                tessellator.addVertexWithUV(xMin, yMax, -depth, f12, f13);
-                tessellator.addVertexWithUV(xMin, yMin, -depth, f12, f14);
-                tessellator.addVertexWithUV(xMin, yMin, depth, f11, f14);
-                tessellator.addVertexWithUV(xMin, yMax, depth, f11, f13);
-                tessellator.draw();
-            }
+	        for (int i = 0; i < paintingData.blockWidth; i++)
+	        {
+	            for (int j = 0; j < paintingData.blockHeight; j++)
+	            {
+	                float xMin = halfW + (i * 16);
+	                float xMax = halfW + ((i + 1) * 16);
+	                float yMin = halfH + (j * 16);
+	                float yMax = halfH + ((j + 1) * 16);
+	                
+	                if (pass == 0)
+	                {
+	                	int light = calcBlockLighting(painting, (xMax + xMin) / 2F, (yMax + yMin) / 2F);
+	                	lightTotal += light;
+	                	lightCount++;
+	                }
+	                else if (pass == 1)
+	                {
+	    	            int lightX = averagedLight % 65536;
+	    	            int lightY = averagedLight / 65536;
+	    	            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
+	    	            GL11.glColor3f(1F, 1F, 1F);
+	    	            
+		                float uMin = (float)(paintingData.blockWidth - i - 1) / (float)paintingData.blockWidth;
+		                float uMax = (float)(paintingData.blockWidth - i) / (float)paintingData.blockWidth;
+		                float vMin = (float)(paintingData.blockHeight - j - 1) / (float)paintingData.blockHeight;
+		                float vMax = (float)(paintingData.blockHeight - j) / (float)paintingData.blockHeight;
+		                
+		                Tessellator tessellator = Tessellator.instance;
+		                
+		                bindTexture(paintingData.clientTexture);
+		                tessellator.startDrawingQuads();
+		                tessellator.setNormal(0F, 0F, -1F);
+		                tessellator.addVertexWithUV(xMax, yMin, -depth, uMin, vMax);
+		                tessellator.addVertexWithUV(xMin, yMin, -depth, uMax, vMax);
+		                tessellator.addVertexWithUV(xMin, yMax, -depth, uMax, vMin);
+		                tessellator.addVertexWithUV(xMax, yMax, -depth, uMin, vMin);
+		                tessellator.draw();
+		                
+		                bindTexture(defaultPaintingTexture);
+		                tessellator.startDrawingQuads();
+		                tessellator.setNormal(0F, 0F, 1F);
+		                tessellator.addVertexWithUV(xMax, yMax, depth, backUMin, backVMin);
+		                tessellator.addVertexWithUV(xMin, yMax, depth, backUMax, backVMin);
+		                tessellator.addVertexWithUV(xMin, yMin, depth, backUMax, backVMax);
+		                tessellator.addVertexWithUV(xMax, yMin, depth, backUMin, backVMax);
+		                tessellator.setNormal(0F, 1F, 0F);
+		                tessellator.addVertexWithUV(xMax, yMax, -depth, f7, f9);
+		                tessellator.addVertexWithUV(xMin, yMax, -depth, f8, f9);
+		                tessellator.addVertexWithUV(xMin, yMax, depth, f8, f10);
+		                tessellator.addVertexWithUV(xMax, yMax, depth, f7, f10);
+		                tessellator.setNormal(0F, -1F, 0F);
+		                tessellator.addVertexWithUV(xMax, yMin, depth, f7, f9);
+		                tessellator.addVertexWithUV(xMin, yMin, depth, f8, f9);
+		                tessellator.addVertexWithUV(xMin, yMin, -depth, f8, f10);
+		                tessellator.addVertexWithUV(xMax, yMin, -depth, f7, f10);
+		                tessellator.setNormal(-1F, 0F, 0F);
+		                tessellator.addVertexWithUV(xMax, yMax, depth, f12, f13);
+		                tessellator.addVertexWithUV(xMax, yMin, depth, f12, f14);
+		                tessellator.addVertexWithUV(xMax, yMin, -depth, f11, f14);
+		                tessellator.addVertexWithUV(xMax, yMax, -depth, f11, f13);
+		                tessellator.setNormal(1F, 0F, 0F);
+		                tessellator.addVertexWithUV(xMin, yMax, -depth, f12, f13);
+		                tessellator.addVertexWithUV(xMin, yMin, -depth, f12, f14);
+		                tessellator.addVertexWithUV(xMin, yMin, depth, f11, f14);
+		                tessellator.addVertexWithUV(xMin, yMax, depth, f11, f13);
+		                tessellator.draw();
+	                }
+	            }
+	        }
+	        
+	        if (pass == 0)
+	        {
+	        	averagedLight = (int)Math.round((double)lightTotal / (double)lightCount);
+	        }
         }
     }
 
-    private void setupLighting(EntityCustomPainting painting, float midX, float midY)
+    private int calcBlockLighting(EntityCustomPainting painting, float midX, float midY)
     {
         int i = MathHelper.floor_double(painting.posX);
         int j = MathHelper.floor_double(painting.posY + (midY / 16F));
@@ -156,9 +180,6 @@ public class RenderCustomPainting extends Render
         }
 
         int light = renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);
-        int lightX = light % 65536;
-        int lightY = light / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightX, lightY);
-        GL11.glColor3f(1F, 1F, 1F);
+        return light;
     }
 }
