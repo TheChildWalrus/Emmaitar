@@ -73,7 +73,8 @@ public class RenderCustomPainting extends Render
         float f13 = 0F / 256F;
         float f14 = 16F / 256F;
         
-       	long lightTotal = 0;
+        long lightTotalSky = 0;
+       	long lightTotalBlock = 0;
        	int lightCount = 0;
        	int averagedLight = 0;
         
@@ -91,7 +92,10 @@ public class RenderCustomPainting extends Render
 	                if (pass == 0)
 	                {
 	                	int light = calcBlockLighting(painting, (xMax + xMin) / 2F, (yMax + yMin) / 2F);
-	                	lightTotal += light;
+	                	int lightSky = (light >> 20) & 15;
+	                	int lightBlock = (light >> 4) & 15;
+	                	lightTotalSky += lightSky;
+	                	lightTotalBlock += lightBlock;
 	                	lightCount++;
 	                }
 	                else if (pass == 1)
@@ -151,7 +155,9 @@ public class RenderCustomPainting extends Render
 	        
 	        if (pass == 0)
 	        {
-	        	averagedLight = (int)Math.round((double)lightTotal / (double)lightCount);
+	        	int avgSky = (int)Math.round((double)lightTotalSky / (double)lightCount);
+	        	int avgBlock = (int)Math.round((double)lightTotalBlock / (double)lightCount);
+	        	averagedLight = (avgSky << 20) | (avgBlock << 4);
 	        }
         }
     }

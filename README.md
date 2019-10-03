@@ -6,7 +6,7 @@ When installed on a server, the admins can upload painting images and configure 
 
 *Emmaitar* is Quenya for 'picture-artist' - *painter*.
 
-**Mod Download** - [Emmaitar 1.2](https://github.com/TheChildWalrus/Emmaitar/raw/master/Emmaitar-1.2.jar)
+**Mod Download** - [Emmaitar 1.2.1](https://github.com/TheChildWalrus/Emmaitar/raw/master/Emmaitar-1.2.1.jar)
 
 
 **How do I configure the paintings?**
@@ -50,7 +50,7 @@ The recipe format is a list of eight dyes. In-game, this generates a crafting re
 [Dye 6] [Dye 7] [Dye 8]
 ```
 
-The painting item in the middle must be a normal painting item, not an Emmaitar custom painting. The dyes use the Forge ore dictionary, so any dye of that colour will work to craft the painting, vanilla or modded.
+The painting item in the middle must be a normal painting item, not an Emmaitar custom painting. The dyes use the Forge ore dictionary, so **any dye of that colour** will work to craft the painting: you can use **vanilla *or* modded** dyes.
 
 To configure these recipes in the metadata file you use a comma-separated list of dye names, as above:
 
@@ -94,3 +94,7 @@ The mod also adds two ingame commands: `emmaitar_give` and `emmaitar_print`.
 These images are placed in the folder `emmaitar-paintings/info-printouts`.
 
 The point of this printout command is to help server admins if they want to make a recipe catalogue available to the players. Rather than spending ages arranging your configured recipes in-game and taking screenshots, you can just run this command in singleplayer with the paintings and auto-generate a catalogue of painting information.
+
+**Other stuff**
+
+These paintings render with a consistent lighting level (the light level is averaged over all blocks) so they don't go patchy indoors.

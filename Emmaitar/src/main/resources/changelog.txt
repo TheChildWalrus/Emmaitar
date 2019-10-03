@@ -1,3 +1,7 @@
+Emmaitar 1.2.1
+
+* Fixed smooth lighting calculations (the separate sky and block lighting values were not treated correctly, sometimes causing darkening)
+
 Emmaitar 1.2
 
 * Custom paintings now render with a consistent, smooth level of lighting over the whole painting (lighting is averaged over all blocks)
