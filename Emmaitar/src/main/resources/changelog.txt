@@ -1,3 +1,7 @@
+Emmaitar 1.2.2
+
+* Allow multiple paintings with the same title, as long as they are by different authors
+
 Emmaitar 1.2.1
 
 * Fixed smooth lighting calculations (the separate sky and block lighting values were not treated correctly, sometimes causing darkening)

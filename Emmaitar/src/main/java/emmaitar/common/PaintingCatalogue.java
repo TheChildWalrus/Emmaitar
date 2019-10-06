@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Charsets;
 
@@ -20,7 +21,7 @@ public class PaintingCatalogue
 {
 	private static List<CustomPaintingData> allPaintings = new ArrayList();
 	private static Map<String, CustomPaintingData> idLookup = new HashMap();
-	private static Map<String, CustomPaintingData> titleLookup = new HashMap();
+	private static Map<Pair<String, String>, CustomPaintingData> authorTitleLookup = new HashMap();
 	
 	private static List<CustomPaintingData> recipeConflicting = new ArrayList();
 	
@@ -158,9 +159,10 @@ public class PaintingCatalogue
 			return false;
 		}
 		
-		if (titleLookup.containsKey(painting.title))
+		Pair<String, String> authorTitleKey = Pair.of(painting.authorName, painting.title);
+		if (authorTitleLookup.containsKey(authorTitleKey))
 		{
-			FMLLog.severe("Emmaitar ERROR: A custom painting with the title %s already exists! Change the title in the painting's meta file.", painting.title);
+			FMLLog.severe("Emmaitar ERROR: A custom painting with (author,title) = (%s,%s) already exists! Change the author and/or title in the painting's meta file.", painting.authorName, painting.title);
 			return false;
 		}
 		
@@ -181,7 +183,7 @@ public class PaintingCatalogue
 		
 		allPaintings.add(painting);
 		idLookup.put(painting.identifier, painting);
-		titleLookup.put(painting.title, painting);
+		authorTitleLookup.put(authorTitleKey, painting);
 		//FMLLog.info("Emmaitar: Successfully loaded painting: %s", painting.identifier); // No need to log the successful loads
 		return true;
 	}
