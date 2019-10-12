@@ -98,3 +98,10 @@ The point of this printout command is to help server admins if they want to make
 **Other stuff**
 
 These paintings render with a consistent lighting level (the light level is averaged over all blocks) so they don't go patchy indoors.
+
+**To-do list**
+
+Future features that I intend to work on at some point:
+- `reload` command, to reload the painting list from the filesystem without needing to stop and restart the game
+- craftable painting catalogue (a modified book item), to view all loaded paintings and their recipes and information in-game
+- (Possibly) an option to specify an alternative rendering style for paintings, without the wooden frame
