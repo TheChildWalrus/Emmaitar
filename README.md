@@ -8,6 +8,7 @@ When installed on a server, the admins can upload painting images and configure 
 
 **Mod Download** - [Emmaitar 1.2.2](https://github.com/TheChildWalrus/Emmaitar/raw/master/Emmaitar-1.2.2.jar)
 
+**NEI Plugin for Emmaitar** (developed by The_Ranger_Malvegil, shows painting recipes) - [download](https://www.curseforge.com/minecraft/mc-mods/nei-emmaitar)
 
 **How do I configure the paintings?**
 
