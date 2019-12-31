@@ -10,6 +10,7 @@ When installed on a server, the admins can upload painting images and configure 
 
 **NEI Plugin for Emmaitar** (developed by The_Ranger_Malvegil, shows painting recipes) - [download](https://www.curseforge.com/minecraft/mc-mods/nei-emmaitar), requires [NEI Recipe Handlers](https://github.com/CraftedMods/nei-recipe-handlers) and NEI itself, etc.
 
+
 **How do I configure the paintings?**
 
 The mod generates a server directory, `emmaitar-paintings`, into which you place the painting images. A painting must be a `.png` file, and the width and height must be multiples of 16.
