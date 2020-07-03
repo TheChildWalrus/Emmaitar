@@ -8,6 +8,9 @@ When installed on a server, the admins can upload painting images and configure 
 
 **Mod Download** - [Emmaitar 1.2.2](https://github.com/TheChildWalrus/Emmaitar/raw/master/Emmaitar-1.2.2.jar)
 
+**NEI Plugin for Emmaitar** (developed by The_Ranger_Malvegil, shows painting recipes) - [download](https://www.curseforge.com/minecraft/mc-mods/nei-emmaitar), requires [NEI Recipe Handlers](https://github.com/CraftedMods/nei-recipe-handlers) and NEI itself, etc.
+
+===
 
 **How do I configure the paintings?**
 
@@ -39,6 +42,7 @@ Lines beginning with `#` are comments, which are ignored. Note the metadata form
 
 Most of these properties are self-explanatory, but let's take some time to explain the recipe syntax:
 
+===
 
 **Recipe syntax**
 
@@ -80,6 +84,7 @@ White
 
 For the sake of completion, I should point out that **each custom painting needs to have a unique dye recipe**!
 
+===
 
 **Commands**
 
@@ -95,6 +100,17 @@ These images are placed in the folder `emmaitar-paintings/info-printouts`.
 
 The point of this printout command is to help server admins if they want to make a recipe catalogue available to the players. Rather than spending ages arranging your configured recipes in-game and taking screenshots, you can just run this command in singleplayer with the paintings and auto-generate a catalogue of painting information.
 
+===
+
 **Other stuff**
 
 These paintings render with a consistent lighting level (the light level is averaged over all blocks) so they don't go patchy indoors.
+
+===
+
+**To-do list**
+
+Future features that I intend to work on at some point:
+- `reload` command, to reload the painting list from the filesystem without needing to stop and restart the game
+- craftable painting catalogue (a modified book item), to view all loaded paintings and their recipes and information in-game
+- (Possibly) an option to specify an alternative rendering style for paintings, without the wooden frame
